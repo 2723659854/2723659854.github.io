@@ -189,6 +189,10 @@
                     <h3>推流鉴权防护</h3>
                     <p>支持stream key密钥鉴权，拦截非法推流覆盖直播间，保障私有直播安全。</p>
                 </div>
+                <div class="card">
+                    <h3>内置PHP转播推流工具</h3>
+                    <p>原生支持 RTMP、HTTP-FLV、WebSocket-FLV拉流转发多路直播，轻松便捷无忧。</p>
+                </div>
             </div>
         </section>
 
@@ -227,8 +231,18 @@
         </section>
 
         <footer>
-            <p>RTMP Server | Pure PHP Media Streaming Server © 2024–2026 2723659854 All Rights Reserved</p>
+            <p id="copyrightLine">RTMP Server | Pure PHP Media Streaming Server © 2024 2723659854 All Rights Reserved</p>
+            <script>
+                // 项目起始年份2024
+                const start = 2024;
+                const now = new Date().getFullYear();
+                const el = document.getElementById('copyrightLine');
+                if(now > start){
+                    el.innerHTML = `RTMP Server | Pure PHP Media Streaming Server © ${start}–${now} 2723659854(xiaosongshu) All Rights Reserved`;
+                }
+            </script>
         </footer>
+
     </div>
 </body>
 </html>
