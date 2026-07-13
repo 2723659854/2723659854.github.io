@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTMP Server | 纯PHP自研直播服务</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Consolas, monospace, system-ui;
+        }
+        body {
+            background: #0f141e;
+            color: #e6edf3;
+            line-height: 1.7;
+            padding: 0 16px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 0;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 30px;
+        }
+        h1 {
+            font-size: 42px;
+            color: #58a6ff;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #8b949e;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .badge-row {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 14px;
+        }
+        .blue { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+        .green { background: #23863633; color: #56d364; border: 1px solid #238636; }
+        .orange { background: #db6d2833; color: #fb9c47; border: 1px solid #db6d28; }
+        .purple { background: #8957e533; color: #bc8cff; border: 1px solid #8957e5; }
+        section {
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 26px;
+            border-left: 4px solid #58a6ff;
+            padding-left: 14px;
+            margin-bottom: 20px;
+            color: #f0f6fc;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 24px;
+            transition: 0.2s ease;
+        }
+        .card:hover {
+            border-color: #58a6ff;
+            transform: translateY(-4px);
+        }
+        .card h3 {
+            color: #58a6ff;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .card p {
+            color: #8b949e;
+            font-size: 15px;
+        }
+        code {
+            background: #1c2129;
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: #fb9c47;
+            font-family: Consolas;
+        }
+        pre {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        .link-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        a.btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #238636;
+            color: white;
+        }
+        .btn-outline {
+            border: 1px solid #58a6ff;
+            color: #58a6ff;
+            background: transparent;
+        }
+        footer {
+            margin-top: 80px;
+            text-align: center;
+            color: #6e7681;
+            font-size: 14px;
+            padding-top: 30px;
+            border-top: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RTMP Server</h1>
+            <p class="subtitle">纯PHP自研轻量级RTMP直播服务｜零FFmpeg、Nginx第三方流媒体依赖，私有化直播底层基础设施</p>
+            <div class="badge-row">
+                <span class="badge blue">PHP >= 8.1 CLI</span>
+                <span class="badge green">RTMP / HTTP-FLV / WS-FLV</span>
+                <span class="badge orange">HLS / fMP4 / MP4录制</span>
+                <span class="badge purple">Linux epoll 高并发</span>
+            </div>
+            <div class="link-group" style="justify-content: center; margin-top:30px;">
+                <a class="btn btn-primary" href="https://github.com/2723659854/rtmp_server" target="_blank">GitHub 仓库</a>
+                <a class="btn btn-outline" href="https://github.com/2723659854/flv2mp4" target="_blank">配套工具 flv2mp4</a>
+            </div>
+        </header>
+
+        <section>
+            <h2>项目核心亮点</h2>
+            <div class="feature-grid">
+                <div class="card">
+                    <h3>完全零第三方依赖</h3>
+                    <p>不依赖 FFmpeg、Nginx、Swoole 等流媒体组件，纯PHP手写完整RTMP协议栈，开箱即用。</p>
+                </div>
+                <div class="card">
+                    <h3>全协议全覆盖</h3>
+                    <p>原生支持 RTMP、HTTP-FLV、WebSocket-FLV、HLS-TS、fMP4 分片，PC/手机/微信全平台播放。</p>
+                </div>
+                <div class="card">
+                    <h3>跨平台兼容</h3>
+                    <p>Linux自动启用epoll事件驱动高并发；Windows自动降级select，本地调试无门槛。</p>
+                </div>
+                <div class="card">
+                    <h3>自动录制转码</h3>
+                    <p>并行FLV原始流录制、实时HLS/fMP4切片，直播结束自动合并完整MP4点播文件。</p>
+                </div>
+                <div class="card">
+                    <h3>多进程IPC流同步</h3>
+                    <p>自研TCP进程间通信，多核CPU充分利用，多Worker进程共享直播流，支持大规模并发。</p>
+                </div>
+                <div class="card">
+                    <h3>集群分布式部署</h3>
+                    <p>内置FLV分发网关、静态文件网关，支持多级级联、负载均衡，可支撑十万级在线观众。</p>
+                </div>
+                <div class="card">
+                    <h3>内置Web推拉流页面</h3>
+                    <p>自带屏幕采集推流、本地文件循环推流、多码率弱网适配、多路画面合并页面，无需前端二次开发。</p>
+                </div>
+                <div class="card">
+                    <h3>推流鉴权防护</h3>
+                    <p>支持stream key密钥鉴权，拦截非法推流覆盖直播间，保障私有直播安全。</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>快速启动</h2>
+            <h3 style="margin:12px 0;color:#ccd6dd;">1. 安装项目</h3>
+<pre>composer create-project xiaosongshu/rtmp_server</pre>
+            <h3 style="margin:12px 0;color:#ccd6dd;">2. 启动主服务</h3>
+<pre>php server.php</pre>
+            <p>启动后自动监听：<code>1935(RTMP)</code>、<code>8501(FLV/WS-FLV)</code>、<code>80(静态网页/点播)</code></p>
+
+            <h3 style="margin:12px 0;color:#ccd6dd;">3. OBS 推流地址示例</h3>
+<pre>rtmp://127.0.0.1:1935/live/stream</pre>
+
+            <h3 style="margin:12px 0;color:#ccd6dd;">4. 浏览器直接观看直播</h3>
+<pre>http://127.0.0.1/index.html</pre>
+        </section>
+
+        <section>
+            <h2>适用场景</h2>
+            <ul style="padding-left:22px;color:#8b949e;font-size:16px;">
+                <li>企业私有化内部直播、培训课堂、监控画面实时推送</li>
+                <li>个人直播、本地录播测试、流媒体底层协议学习研究</li>
+                <li>中小型商用直播平台、低延迟网页直播、手机HLS点播</li>
+                <li>大型活动高并发集群部署，搭配CDN实现十万级分发</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>联系方式 & 开源协议</h2>
+            <p>开源协议：Apache License 2.0，可自由商用、二次开发</p>
+            <p style="margin-top:10px;">作者邮箱：2723659854@qq.com</p>
+            <div class="link-group">
+                <a class="btn btn-outline" href="https://github.com/2723659854" target="_blank">我的GitHub主页</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>RTMP Server | Pure PHP Media Streaming Server © 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
